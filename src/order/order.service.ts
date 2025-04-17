@@ -8,6 +8,7 @@ import { Order } from './order.model';
 import { OrderItem } from 'src/order-item/order-item.model';
 import { CartItem } from 'src/cart-item/cart-item.model';
 import { Wallpaper } from 'src/wallpaper/wallpaper.model';
+import { Stock } from 'src/stock/stock.model';
 
 @Injectable()
 export class OrderService {
@@ -20,7 +21,12 @@ export class OrderService {
   async createOrder(userId: number) {
     const cartItems = await this.cartRepo.findAll({
       where: { userId },
-      include: [Wallpaper],
+      include: [
+        {
+          model: Wallpaper,
+          include: [Stock],
+        },
+      ],
     });
 
     if (!cartItems.length) {
@@ -29,14 +35,38 @@ export class OrderService {
 
     const order = await this.orderRepo.create({ userId });
 
-    const orderItems = cartItems.map((item) => ({
-      orderId: order.id,
-      wallpaperId: item.wallpaperId,
-      quantity: item.quantity,
-      priceAtPurchase: item.wallpaper.price,
-    }));
+    const now = new Date();
+
+    const orderItems = cartItems.map((item) => {
+      const price = item.wallpaper.price;
+      const stock = item.wallpaper.stock;
+
+      let finalPrice = price;
+
+      if (
+        stock &&
+        new Date(stock.startDate) <= now &&
+        new Date(stock.endDate) >= now
+      ) {
+        finalPrice = price - (price * stock.discountPercent) / 100;
+      }
+
+      return {
+        orderId: order.id,
+        wallpaperId: item.wallpaperId,
+        quantity: item.quantity,
+        priceAtPurchase: parseFloat(finalPrice.toFixed(2)),
+      };
+    });
 
     await this.orderItemRepo.bulkCreate(orderItems);
+
+    const totalPrice = orderItems.reduce(
+      (sum, item) => sum + item.priceAtPurchase * item.quantity,
+      0,
+    );
+  
+    await order.update({ totalPrice });
 
     await this.cartRepo.destroy({ where: { userId } });
 

@@ -5,7 +5,7 @@ import {
   Table,
 } from 'sequelize-typescript';
 
-@Table({ tableName: 'promotions' })
+@Table({ tableName: 'stocks' })
 export class Stock extends Model<Stock> {
   @Column({
     type: DataType.INTEGER,

@@ -7,6 +7,7 @@ import {
   Table,
 } from 'sequelize-typescript';
 import { Collection } from 'src/collection/collection.model';
+import { Stock } from 'src/stock/stock.model';
 
 interface WallpaperCreationAttrs {
   base_material: string;
@@ -43,4 +44,11 @@ export class Wallpaper extends Model<Wallpaper, WallpaperCreationAttrs> {
 
   @BelongsTo(() => Collection)
   collection: Collection;
+
+  @ForeignKey(() => Stock)
+  @Column({ type: DataType.INTEGER, allowNull: true })
+  stockId: number;
+
+  @BelongsTo(() => Stock)
+  stock: Stock;
 }

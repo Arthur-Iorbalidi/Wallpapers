@@ -33,6 +33,9 @@ export class Order extends Model<Order> {
   @Column({ type: DataType.STRING, allowNull: false, defaultValue: 'pending' })
   status: string;
 
+  @Column({ type: DataType.DOUBLE, allowNull: false, defaultValue: 0 })
+  totalPrice: number;
+
   @Column({ type: DataType.DATE, allowNull: false, defaultValue: DataType.NOW })
   createdAt: Date;
 }

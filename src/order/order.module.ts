@@ -20,6 +20,6 @@ import { AuthModule } from 'src/auth/auth.module';
       ]),
       AuthModule
     ],
-    exports: [OrderModule],
+    exports: [OrderService],
 })
 export class OrderModule {}

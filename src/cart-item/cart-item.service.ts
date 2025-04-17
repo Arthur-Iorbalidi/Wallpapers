@@ -39,7 +39,10 @@ export class CartItemService {
   async getCart(userId: number) {
     return this.cartItemRepository.findAll({
       where: { userId },
-      include: { all: true },
+      include: { 
+        all: true,
+        nested: true,
+      },
     });
   }
 }

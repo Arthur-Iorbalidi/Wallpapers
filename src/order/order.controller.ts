@@ -34,5 +34,4 @@ export class OrderController {
   async getOne(@Param('id') id: number, @Request() req) {
     return this.orderService.getOrderById(req.user.id, +id);
   }
-
 }
