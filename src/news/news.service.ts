@@ -20,7 +20,7 @@ export class NewsService {
     });
 
     if (!news) {
-      throw new NotFoundException(`Movie not found`);
+      throw new NotFoundException(`News not found`);
     }
 
     return news;

@@ -5,6 +5,8 @@ import { Order } from './order.model';
 import { OrderItem } from 'src/order-item/order-item.model';
 import { User } from 'src/user/user.model';
 import { SequelizeModule } from '@nestjs/sequelize';
+import { CartItem } from 'src/cart-item/cart-item.model';
+import { AuthModule } from 'src/auth/auth.module';
 
 @Module({
   controllers: [OrderController],
@@ -13,8 +15,10 @@ import { SequelizeModule } from '@nestjs/sequelize';
       SequelizeModule.forFeature([
         Order,
         OrderItem,
+        CartItem,
         User
       ]),
+      AuthModule
     ],
     exports: [OrderModule],
 })

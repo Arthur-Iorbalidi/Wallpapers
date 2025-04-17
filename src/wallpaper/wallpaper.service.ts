@@ -2,7 +2,6 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { Wallpaper } from './wallpaper.model';
 import { InjectModel } from '@nestjs/sequelize';
 import { Op } from 'sequelize';
-import { FilesService } from 'src/files/files.service';
 
 interface GetAllWallpapersOptions {
   sortBy?: string;
@@ -14,7 +13,6 @@ interface GetAllWallpapersOptions {
 export class WallpaperService {
   constructor(
     @InjectModel(Wallpaper) private wallpaperRepository: typeof Wallpaper,
-    private fileService: FilesService,
   ) {}
 
   async getAll(options: GetAllWallpapersOptions) {
@@ -27,14 +25,24 @@ export class WallpaperService {
     const where: any = {};
 
     if (search) {
-      where[Op.or] = [
-        { id: { [Op.iLike]: `%${search}%` } },
-      ];
+      const isNumeric = !isNaN(Number(search));
+    
+      if (isNumeric) {
+        where[Op.or] = [
+          { id: Number(search) },
+        ];
+      } else {
+        where[Op.or] = [
+          { base_material: { [Op.iLike]: `%${search}%` } },
+        ];
+      }
     }
+    
 
     const wallpapers = await this.wallpaperRepository.findAll({
       where,
       order: [[sortBy, sortOrder]],
+      include: {all: true}
     });
 
     return wallpapers;
@@ -43,10 +51,11 @@ export class WallpaperService {
   async getById(id: number) {
     const wallpaper = await this.wallpaperRepository.findOne({
       where: { id },
+      include: {all: true}
     });
 
     if (!wallpaper) {
-      throw new NotFoundException(`Movie not found`);
+      throw new NotFoundException(`Wallpaper not found`);
     }
 
     return wallpaper;

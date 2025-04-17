@@ -5,6 +5,7 @@ import { CartItem } from './cart-item.model';
 import { User } from 'src/user/user.model';
 import { Wallpaper } from 'src/wallpaper/wallpaper.model';
 import { SequelizeModule } from '@nestjs/sequelize';
+import { AuthModule } from 'src/auth/auth.module';
 
 @Module({
   controllers: [CartItemController],
@@ -15,6 +16,7 @@ import { SequelizeModule } from '@nestjs/sequelize';
         User,
         Wallpaper
       ]),
+      AuthModule
     ],
     exports: [CartItemModule],
 })

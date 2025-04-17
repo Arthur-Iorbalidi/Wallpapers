@@ -21,6 +21,7 @@ import { News } from './news/news.model';
 import { Collection } from './collection/collection.model';
 import { CartItem } from './cart-item/cart-item.model';
 import { WallpaperModule } from './wallpaper/wallpaper.module';
+import { CollectionModule } from './collection/collection.module';
 
 @Module({
   controllers: [],
@@ -60,7 +61,8 @@ import { WallpaperModule } from './wallpaper/wallpaper.module';
     CartItemModule,
     OrderItemModule,
     StockModule,
-    WallpaperModule
+    WallpaperModule,
+    CollectionModule
   ],
 })
 export class AppModule {}
