@@ -4,7 +4,7 @@ import { InjectModel } from '@nestjs/sequelize';
 import { Op } from 'sequelize';
 import { FilesService } from 'src/files/files.service';
 
-interface GetAllMoviesOptions {
+interface GetAllWallpapersOptions {
   sortBy?: string;
   sortOrder?: 'ASC' | 'DESC';
   search?: string;
@@ -17,9 +17,9 @@ export class WallpaperService {
     private fileService: FilesService,
   ) {}
 
-  async getAll(options: GetAllMoviesOptions) {
+  async getAll(options: GetAllWallpapersOptions) {
     const {
-      sortBy = 'name',
+      sortBy = 'createdAt',
       sortOrder = 'ASC',
       search,
     } = options;
@@ -28,27 +28,27 @@ export class WallpaperService {
 
     if (search) {
       where[Op.or] = [
-        { name: { [Op.iLike]: `%${search}%` } },
+        { id: { [Op.iLike]: `%${search}%` } },
       ];
     }
 
-    const movies = await this.wallpaperRepository.findAll({
+    const wallpapers = await this.wallpaperRepository.findAll({
       where,
       order: [[sortBy, sortOrder]],
     });
 
-    return movies;
+    return wallpapers;
   }
 
   async getById(id: number) {
-    const movie = await this.wallpaperRepository.findOne({
+    const wallpaper = await this.wallpaperRepository.findOne({
       where: { id },
     });
 
-    if (!movie) {
+    if (!wallpaper) {
       throw new NotFoundException(`Movie not found`);
     }
 
-    return movie;
+    return wallpaper;
   }
 }

@@ -20,6 +20,7 @@ import { Order } from './order/order.model';
 import { News } from './news/news.model';
 import { Collection } from './collection/collection.model';
 import { CartItem } from './cart-item/cart-item.model';
+import { WallpaperModule } from './wallpaper/wallpaper.module';
 
 @Module({
   controllers: [],
@@ -59,6 +60,7 @@ import { CartItem } from './cart-item/cart-item.model';
     CartItemModule,
     OrderItemModule,
     StockModule,
+    WallpaperModule
   ],
 })
 export class AppModule {}
